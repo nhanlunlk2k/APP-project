@@ -2,6 +2,7 @@ import os
 import urllib.request
 import tarfile
 
+import pandas as pd
 import pickle
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
@@ -178,4 +179,27 @@ def plot_details(filename):
         ax.text(x[i] + 2 * width, fc_times[i], f"{fc_times[i]:.2f}", ha='center', va='bottom')
         ax.text(x[i] + 3 * width, softmax_times[i], f"{softmax_times[i]:.2f}", ha='center', va='bottom')
 
+    plt.show()
+
+# hàm plot theo epoch cho từng cột
+def plot_timeline_from_log(csv_path, columns=None, title="Timeline", ylabel="Time (s)"):
+
+    df = pd.read_csv(csv_path)
+
+    # Nếu không truyền gì thì mặc định chọn tất cả các cột thời gian
+    if columns is None:
+        columns = [col for col in df.columns if "Time" in col and col != "Total Time (s)"]
+
+    epochs = list(range(1, len(df) + 1))
+
+    plt.figure(figsize=(10, 6))
+    for col in columns:
+        plt.plot(epochs, df[col], marker='o', label=col)
+
+    plt.xlabel("Epoch")
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
     plt.show()
