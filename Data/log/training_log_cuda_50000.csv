@@ -1,2 +1,2 @@
 Epoch,Total Epochs,Epoch Time (s),Time per Step (ms),Loss,Accuracy
-1,1,1.196664,119.666409,1.156635,0.100000
+1,1,6140.945397,122.818908,0.035903,0.129722

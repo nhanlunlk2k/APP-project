@@ -203,3 +203,49 @@ def plot_timeline_from_log(csv_path, columns=None, title="Timeline", ylabel="Tim
     plt.grid(True)
     plt.tight_layout()
     plt.show()
+
+def plot_compare_details_customized(file1, file2, label1='NumPy', label2='Numba'):
+    def read_data(filename):
+        with open(filename, "r") as file:
+            lines = file.readlines()[1:]
+            data = [line.strip().split(",") for line in lines]
+
+        conv2d_times = [float(d[2]) for d in data]
+        relu_times = [float(d[3]) for d in data]
+        maxpool_times = [float(d[4]) for d in data]
+        flatten_times = [float(d[5]) for d in data]
+        fc_times = [float(d[6]) for d in data]
+        softmax_times = [float(d[7]) for d in data]
+        return [conv2d_times[0], relu_times[0], maxpool_times[0], flatten_times[0], fc_times[0], softmax_times[0]]
+
+    # Lấy thời gian từng lớp từ hai file
+    times1 = read_data(file1)
+    times2 = read_data(file2)
+    layer_names = ['Conv2D', 'ReLU', 'MaxPool2D', 'Flatten', 'FC', 'Softmax']
+
+    x = np.arange(len(layer_names))
+    width = 0.35
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    bars1 = ax.bar(x - width/2, times1, width, label=label1, color='skyblue')
+    bars2 = ax.bar(x + width/2, times2, width, label=label2, color='orange')
+
+    # Ghi giá trị lên từng cột
+    for bar in bars1:
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2, height, f"{height:.2f}", ha='center', va='bottom', fontsize=9)
+
+    for bar in bars2:
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2, height, f"{height:.2f}", ha='center', va='bottom', fontsize=9)
+
+    ax.set_xlabel('Layer')
+    ax.set_ylabel('Time (s)')
+    ax.set_title('Execution Time Comparison per Layer in 1st Epoch')
+    ax.set_xticks(x)
+    ax.set_xticklabels(layer_names)
+    ax.legend()
+    ax.grid(True, axis='y', linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.show()
