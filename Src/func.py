@@ -249,3 +249,17 @@ def plot_compare_details_customized(file1, file2, label1='NumPy', label2='Numba'
     ax.grid(True, axis='y', linestyle='--', alpha=0.5)
     plt.tight_layout()
     plt.show()
+
+def preprocess_cifar10_data():
+    X_train, y_train, X_test, y_test = load_cifar10_data()
+
+    # Chuyển từ (N, C, H, W) -> (N, H, W, C) và chuẩn hóa về [0, 1]
+    X_train = X_train.transpose(0, 2, 3, 1).astype(np.float32) / 255.0
+    X_test = X_test.transpose(0, 2, 3, 1).astype(np.float32) / 255.0
+
+    # One-hot encoding cho nhãn
+    num_classes = 10
+    y_train_onehot = np.eye(num_classes)[y_train]
+    y_test_onehot = np.eye(num_classes)[y_test]
+
+    return X_train, y_train_onehot, X_test, y_test_onehot
