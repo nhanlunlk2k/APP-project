@@ -1,2 +1,2 @@
 ID,Total Epochs,Conv2D Time (s),ReLU Time (s),MaxPool2D Time (s),Flatten Time (s),FullyConnected Time (s),Softmax Time (s)
-Epoch_1,2,1.175407,0.294677,0.072100,0.007969,0.439051,0.002000
+Epoch_1,64,5470.982043,791.960121,412.068540,59.468824,2075.385189,2.687205
