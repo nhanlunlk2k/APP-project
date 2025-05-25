@@ -263,3 +263,36 @@ def preprocess_cifar10_data():
     y_test_onehot = np.eye(num_classes)[y_test]
 
     return X_train, y_train_onehot, X_test, y_test_onehot
+
+def plot_timeline_multiple_logs(log_files, columns=None, title="Timeline Comparison", ylabel="Time (s)", labels=None):
+    """
+    log_files: list[str] - đường dẫn tới các file .csv log
+    columns: list[str] - các cột thời gian cần vẽ (nếu None thì tự động lấy)
+    labels: list[str] - nhãn tương ứng với từng file để hiển thị trên legend
+    """
+
+    plt.figure(figsize=(12, 6))
+
+    for i, csv_path in enumerate(log_files):
+        df = pd.read_csv(csv_path)
+
+        # Lấy các cột thời gian cần vẽ
+        if columns is None:
+            cols = [col for col in df.columns if "Time" in col and col != "Total Time (s)"]
+        else:
+            cols = columns
+
+        epochs = list(range(1, len(df) + 1))
+        label_prefix = labels[i] if labels and i < len(labels) else f"File {i+1}"
+
+        # Vẽ từng cột thời gian trong file hiện tại
+        for col in cols:
+            plt.plot(epochs, df[col], marker='o', label=f"{label_prefix} - {col}")
+
+    plt.xlabel("Epoch")
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
